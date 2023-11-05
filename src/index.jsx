@@ -15,10 +15,12 @@ class Index extends React.Component {
     }
 
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
+    this.onSwitchHandler = this.onSwitchHandler.bind(this);
     this.onAddNotesHandler = this.onAddNotesHandler.bind(this);
   }
 
   onDeleteHandler(id) {
+    console.log(id)
     const notes = this.state.notes.filter(note => note.id !== id);
     this.setState({ notes });
   }
@@ -35,11 +37,22 @@ class Index extends React.Component {
             id: +new Date(),
             title,
             body,
-            isArchived: false,
-            createdAt: `${currentDate.getDate()} ${monthName} ,${currentDate.getFullYear()}`
+            archived: false,
+            createdAt: `${currentDate.getDate()} ${monthName}, ${currentDate.getFullYear()}`
           }
         ]
       }
+    });
+  }
+
+  onSwitchHandler({ id }) {
+    const updatedNotes = [...this.state.notes];
+    const noteToToggle = updatedNotes.find((note) => note.id === id);
+
+    noteToToggle.archived = !noteToToggle.archived;
+
+    this.setState({
+      notes: updatedNotes,
     });
   }
 
@@ -48,8 +61,8 @@ class Index extends React.Component {
       <React.StrictMode>
         <Router>
           <Routes>
-            <Route path="/" element={<ReadNotes notes={this.state.notes} onDelete={this.onDeleteHandler} />} />
-            <Route path="/add" element={<AddNotes onAdd={this.onAddNotesHandler}/>}/>
+            <Route path="/" element={<ReadNotes notes={this.state.notes} onDelete={this.onDeleteHandler} onSwitch={this.onSwitchHandler} />} />
+            <Route path="/add" element={<AddNotes onAdd={this.onAddNotesHandler} />} />
           </Routes>
         </Router>
       </React.StrictMode>
