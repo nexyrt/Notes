@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import './css/index.css'
-import { data } from './js/data'
+import { getInitialData } from './utils/index'
 import AddNotes from './pages/AddNotes';
 import ReadNotes from './pages/ReadNotes';
 
@@ -11,7 +11,7 @@ class Index extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      notes: data
+      notes: getInitialData()
     }
 
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
@@ -26,9 +26,6 @@ class Index extends React.Component {
   }
 
   onAddNotesHandler({ title, body }) {
-    const currentDate = new Date();
-    const options = { month: 'long' };
-    const monthName = currentDate.toLocaleString('en-US', options);
     this.setState((prevState) => {
       return {
         notes: [
@@ -38,7 +35,7 @@ class Index extends React.Component {
             title,
             body,
             archived: false,
-            createdAt: `${currentDate.getDate()} ${monthName}, ${currentDate.getFullYear()}`
+            createdAt: new Date().toISOString()
           }
         ]
       }
